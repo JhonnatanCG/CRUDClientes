@@ -1,0 +1,259 @@
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/pruebas-rendimiento
+jobs:
+- job: Job_1
+  displayName: Bodegas
+  pool:
+    name: DANIELP
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: AlexandreGattiker.jmeter-tasks.custom-jmeter-installer-task.JMeterInstaller@0
+    displayName: Install JMeter 5.6.3
+  - task: PowerShell@2
+    displayName: Carga Modulo Bodegas
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_carga_bodegas.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_bodegas" -Jprop.threads=80 -Jprop.rampUp=60 -Jprop.duration=3600
+  - task: PowerShell@2
+    displayName: Estres Modulo Bodegas
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: 'jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\01.Gestion Bodegas\03.Estres_Modulo_Bodegas.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_estres_bodegas.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimientos\dashboard_estres_bodegas" -Jprop.targetConcurrency=50 -Jprop.rampUpTime=300 -Jprop.rampUpSteps=10 -Jprop.holdTime=60 -Jprop.duration=3600 '
+  - task: PowerShell@2
+    displayName: Picos Modulo Bodegas
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\01.Gestion Bodegas\04.Picos_Modulo_Bodegas.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_picos_bodegas.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_picos_bodegas" -JTG_Carga_Base.num_threads=40 -JTG_Pico_Bodegas.num_threads=80
+  - task: PowerShell@2
+    displayName: Resistencia Modulo Bodegas
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\01.Gestion Bodegas\05.Resistencia_Modulo_Bodegas.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_resistencia_bodegas.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_resistencia_bodegas" -JThreadGroup.num_threads=60 -JThreadGroup.duration=3600
+- job: Job_2
+  displayName: Regulaciones
+  pool:
+    name: DANIELP
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: AlexandreGattiker.jmeter-tasks.custom-jmeter-installer-task.JMeterInstaller@0
+    displayName: Install JMeter 5.6.3
+  - task: PowerShell@2
+    displayName: Carga Modulo Regulaciones
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\02.Regulaciones\Carga_Modulo_Regulaciones.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_carga_Regulaciones.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_Regulaciones" -Jprop.threads=80 -Jprop.rampUp=60 -Jprop.duration=3600
+  - task: PowerShell@2
+    displayName: Estres Modulo Regulaciones
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: 'jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\02.Regulaciones\Estres_Modulo_Regulaciones.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_estres_Regulaciones.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimientos\dashboard_estres_Regulaciones" -Jprop.targetConcurrency=50 -Jprop.rampUpTime=300 -Jprop.rampUpSteps=10 -Jprop.holdTime=60 -Jprop.duration=3600 '
+  - task: PowerShell@2
+    displayName: Picos Modulo Regulaciones
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\02.Regulaciones\Picos_Modulo_Regulaciones.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_picos_Regulaciones.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_picos_Regulaciones" -JTG_Carga_Base.num_threads=40 -JTG_Pico_Bodegas.num_threads=80
+  - task: PowerShell@2
+    displayName: Resistencia Modulo Regulaciones
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\02.Regulaciones\Resistencia_Modulo_Regulaciones.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_resistencia_Regulaciones.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_resistencia_Regulaciones" -JThreadGroup.num_threads=60 -JThreadGroup.duration=3600
+- job: Job_3
+  displayName: Operativa
+  pool:
+    name: DANIELP
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: AlexandreGattiker.jmeter-tasks.custom-jmeter-installer-task.JMeterInstaller@0
+    displayName: Install JMeter 5.6.3
+  - task: PowerShell@2
+    displayName: Carga Modulo Operativa
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\03.Operativa\Carga_Modulo_Operativa.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_carga_Operativa.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_Operativa" -Jprop.threads=80 -Jprop.rampUp=60 -Jprop.duration=3600
+  - task: PowerShell@2
+    displayName: Estres Modulo Operativa
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: 'jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\03.Operativa\Estres_Modulo_Operativa.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_estres_Operativa.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimientos\dashboard_estres_Operativa" -Jprop.targetConcurrency=50 -Jprop.rampUpTime=300 -Jprop.rampUpSteps=10 -Jprop.holdTime=60 -Jprop.duration=3600 '
+  - task: PowerShell@2
+    displayName: Picos Modulo Operativa
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\03.Operativa\Picos_Modulo_Operativa.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_picos_Operativa.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_picos_Operativa" -JTG_Carga_Base.num_threads=40 -JTG_Pico_Bodegas.num_threads=80
+  - task: PowerShell@2
+    displayName: Resistencia Modulo Operativa
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\03.Operativa\Resistencia_Modulo_Operativa.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_resistencia_Operativa.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_resistencia_Operativa" -JThreadGroup.num_threads=60 -JThreadGroup.duration=3600
+- job: Job_4
+  displayName: Social
+  pool:
+    name: DANIELP
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: AlexandreGattiker.jmeter-tasks.custom-jmeter-installer-task.JMeterInstaller@0
+    displayName: Install JMeter 5.6.3
+  - task: PowerShell@2
+    displayName: Carga Modulo Social
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\04.Social\Carga_Modulo_Social.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_carga_Social.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_Social" -Jprop.threads=80 -Jprop.rampUp=60 -Jprop.duration=3600
+  - task: PowerShell@2
+    displayName: Estres Modulo Social
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: 'jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\04.Social\Estres_Modulo_Social.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_estres_Social.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimientos\dashboard_estres_Social" -Jprop.targetConcurrency=50 -Jprop.rampUpTime=300 -Jprop.rampUpSteps=10 -Jprop.holdTime=60 -Jprop.duration=3600 '
+  - task: PowerShell@2
+    displayName: Picos Modulo Social
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\04.Social\Picos_Modulo_Social.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_picos_Social.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_picos_Social" -JTG_Carga_Base.num_threads=40 -JTG_Pico_Bodegas.num_threads=80
+  - task: PowerShell@2
+    displayName: Resistencia Modulo Social
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\04.Social\Resistencia_Modulo_Social.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_resistencia_Social.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_resistencia_Social" -JThreadGroup.num_threads=60 -JThreadGroup.duration=3600
+- job: Job_5
+  displayName: Dominios
+  pool:
+    name: DANIELP
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: AlexandreGattiker.jmeter-tasks.custom-jmeter-installer-task.JMeterInstaller@0
+    displayName: Install JMeter 5.6.3
+  - task: PowerShell@2
+    displayName: Carga Modulo Dominios
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\05.Dominios\01.Carga_Modulo_Dominios.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_carga_Dominios.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_Dominios" -Jprop.threads=80 -Jprop.rampUp=60 -Jprop.duration=3600
+  - task: PowerShell@2
+    displayName: Estres Modulo Dominios
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: 'jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\05.Dominios\02.Estres_Modulo_Dominios.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_estres_Dominios.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimientos\dashboard_estres_Dominios" -Jprop.targetConcurrency=50 -Jprop.rampUpTime=300 -Jprop.rampUpSteps=10 -Jprop.holdTime=60 -Jprop.duration=3600 '
+  - task: PowerShell@2
+    displayName: Picos Modulo Dominios
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\05.Dominios\03.Picos_Modulo_Dominios.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_picos_Dominios.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_picos_Dominios" -JTG_Carga_Base.num_threads=40 -JTG_Pico_Bodegas.num_threads=80
+  - task: PowerShell@2
+    displayName: Resistencia Modulo Dominios
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\05.Dominios\04.Resistencia_Modulo_Dominios.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_resistencia_Dominios.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_resistencia_Dominios" -JThreadGroup.num_threads=60 -JThreadGroup.duration=3600
+- job: Job_6
+  displayName: Venteros
+  pool:
+    name: DANIELP
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: AlexandreGattiker.jmeter-tasks.custom-jmeter-installer-task.JMeterInstaller@0
+    displayName: Install JMeter 5.6.3
+  - task: PowerShell@2
+    displayName: Carga Modulo Venteros
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\06.Ventero\01.Carga_Modulo_Ventero.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_carga_Ventero.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_Ventero" -Jprop.threads=80 -Jprop.rampUp=60 -Jprop.duration=3600
+  - task: PowerShell@2
+    displayName: Estres Modulo Venteros
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: 'jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\06.Ventero\02.Estres_Modulo_Ventero.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_estres_Ventero.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimientos\dashboard_estres_Ventero" -Jprop.targetConcurrency=50 -Jprop.rampUpTime=300 -Jprop.rampUpSteps=10 -Jprop.holdTime=60 -Jprop.duration=3600 '
+  - task: PowerShell@2
+    displayName: Picos Modulo Venteros
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\06.Ventero\03.Picos_Modulo_Ventero.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_picos_Ventero.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_picos_Ventero" -JTG_Carga_Base.num_threads=40 -JTG_Pico_Bodegas.num_threads=80
+  - task: PowerShell@2
+    displayName: Resistencia Modulo Venteros
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\06.Ventero\04.Resistencia_Modulo_Ventero.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_resistencia_Ventero.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_resistencia_Ventero" -JThreadGroup.num_threads=60 -JThreadGroup.duration=3600
+- job: Job_7
+  displayName: PEV
+  pool:
+    name: DANIELP
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: AlexandreGattiker.jmeter-tasks.custom-jmeter-installer-task.JMeterInstaller@0
+    displayName: Install JMeter 5.6.3
+  - task: PowerShell@2
+    displayName: Carga Modulo PEV
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\07.PEV\01.Carga_Modulo_PEV.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_carga_PEV.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_PEV" -Jprop.threads=80 -Jprop.rampUp=60 -Jprop.duration=3600
+  - task: PowerShell@2
+    displayName: Estres Modulo PEV
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: 'jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\07.PEV\02.Estres_Modulo_PEV.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_estres_PEV.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimientos\dashboard_estres_PEV" -Jprop.targetConcurrency=50 -Jprop.rampUpTime=300 -Jprop.rampUpSteps=10 -Jprop.holdTime=60 -Jprop.duration=3600 '
+  - task: PowerShell@2
+    displayName: Picos Modulo PEV
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\07.PEV\03.Picos_Modulo_PEV.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_picos_PEV.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_picos_PEV" -JTG_Carga_Base.num_threads=40 -JTG_Pico_Bodegas.num_threads=80
+  - task: PowerShell@2
+    displayName: Resistencia Modulo PEV
+    inputs:
+      targetType: inline
+      filePath: jmeter -n -t "$(System.DefaultWorkingDirectory)\test\01.Gestion Bodegas\02.Carga_Modulo_Bodegas.jmx" -l "D:\SISDEP\Pruebas de carga\results\resultados_carga_bodegas.jtl" -e -o "D:\SISDEP\Pruebas de carga\results\dashboard_bodegas" -JThreadGroup.num_threads=80 -Jprop.duration=3600
+      script: >
+        jmeter -n -t "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\test\07.PEV\04.Resistencia_Modulo_PEV.jmx" -l "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\results\resultados_resistencia_PEV.jtl" -e -o "$(System.DefaultWorkingDirectory)\pruebas-rendimiento\dashboard_resistencia_PEV" -JThreadGroup.num_threads=60 -JThreadGroup.duration=3600
+...
